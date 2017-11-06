@@ -1,0 +1,137 @@
+<template>
+  <div class="list">
+    <v-header></v-header>
+    <div class="content" v-loading.body="loading">
+      <div class="menu">
+        <router-link to="/" class='menu-title'><img src="../assets/back.png" alt="返回"> 返回
+        </router-link>
+        <span>{{ category }}</span>
+        <router-link to="/" class='menu-title'><img src="../assets/home.png" alt="首页"> 首页</router-link>
+      </div>
+      <div class="wrapper">
+        <el-row :gutter="10">
+          <el-col :span="6" v-for="(value, index) in info" :key="value.id" class="w-col">
+            <div class="w-content" @click="detail($event)">
+              <el-card class="box-card" v-html="value.title" :id="value.id" :cid="value.cid">
+              </el-card>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
+    <v-footer></v-footer>
+  </div>
+</template>
+<script>
+  import footer from '@/components/footer'
+  import header from '@/components/header'
+
+  const Host = 'http://www.wdexam.com/Api/Pinyin/'
+  export default {
+    name: 'list',
+    components: {
+      'v-footer': footer,
+      'v-header': header
+    },
+    data () {
+      return {
+        category: '',
+        cid: '',
+        title: '',
+        info: '',
+        loading: false
+      }
+    },
+    created () {
+      let that = this
+      this.cid = this.$route.params.cid
+      this.title = this.$route.params.title
+      let params = new URLSearchParams()
+      params.append('cid', this.cid)
+      this.loading = true
+      this.axios.post(Host + 'category', params).then(function (res) {
+        that.loading = false
+        if (res.data.status) {
+          that.category = res.data.info['category']
+          that.info = res.data.info['list']
+        }
+      }).catch(function (res) {
+        setTimeout(function () {
+          that.loading = false
+          console.log(res)
+        }, 1000)
+      })
+    },
+    methods: {
+      detail (el) {
+        let id = el.target.getAttribute('id')
+        let cid = el.target.getAttribute('cid')
+        this.$router.push({path: '/d/' + id + '/' + cid})
+      }
+    }
+  }
+</script>
+<style scoped>
+  @font-face {
+    /* font-properties */
+    font-family: pinyin;
+    src:url('/static/font/GBPinyinokB.ttf')
+  }
+  .list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .list .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .list .content .menu {
+    display: flex;
+    height: 40px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-size: 15px;
+    color: #fff;
+    background-color: #e68540;
+  }
+
+  .list .content .menu .menu-title {
+    font-size: 13px;
+    color: #fff;
+    text-decoration: none;
+  }
+  .list .content .menu .menu-title img{
+    width: 13px;
+    height: 13px;
+    margin-bottom: -1px;
+  }
+
+  .list .content .wrapper {
+    font-family: 'pinyin';
+    flex: 1;
+    overflow-y: auto;
+    text-align: center;
+    padding: 0 15px 10px 15px;
+  }
+
+  .list .content .wrapper .w-col {
+    padding: 5px 0 0 0;
+  }
+
+  .list .content .wrapper .w-content {
+    font-size: 35px;
+    color: #333333;
+    font-weight: 400;
+  }
+  .list .content .wrapper .w-content .box-card{
+    border-color: #e68540;
+    box-shadow: 1px 2px 2px #d47c3c;
+    margin-top: 10px;
+    padding: 13px 0;
+  }
+</style>
