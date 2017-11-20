@@ -1,7 +1,7 @@
 <template>
   <div class="footer">
     <div class="f-title">
-      本课程由哼哼成长品牌版权所有 盗用必究
+      本课程版权所有人为“哼哼成长”　盗用必究
     </div>
   </div>
 </template>

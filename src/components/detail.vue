@@ -1,8 +1,9 @@
 <template>
-  <div class="detail">
-    <v-header></v-header>
-    <div class="content" v-loading.body="loading">
-      <div class="menu">
+  <div style="flex: 1;display: flex">
+    <div v-show="isShow" class="detail">
+      <v-header></v-header>
+      <div class="content" v-loading.body="loading">
+        <div class="menu">
         <span>
           <span class="menu-title" @click="back"><img src="../assets/back.png" alt="返回"> 返回</span>
           <span class="menu-title" @click="prevPage"><img src="../assets/left.png" alt="上一个"> 上一个</span>
@@ -11,7 +12,7 @@
             <img src="../assets/home.png" alt="首页"> 首页
           </router-link>
         </span>
-        <span ref="button">
+          <span ref="button">
           <span v-if="isPlay" @click="play">
             <img src="../assets/pause.png" style="width: 13px;height: 13px;margin-bottom: -1px" alt="暂停"> 暂停
           </span>
@@ -20,14 +21,19 @@
           </span>
 
         </span>
+        </div>
+        <div class="wrapper">
+          <img v-if="thumb" :src="host + 'Uploads/' + thumb" width="100%" height="100%">
+          <audio ref="audio"></audio>
+          <!--<div class="learn">
+            <img src="../assets/learn.png" @click="learn($event)" tag="1" style="width: 120px;height: 24px">
+          </div>-->
+        </div>
       </div>
-      <div class="wrapper">
-        <img v-if="thumb" :src="host + 'Uploads/' + thumb" width="100%" height="100%">
-        <audio ref="audio"></audio>
-        <!--<div class="learn">
-          <div class="learn-btn" @click="learn">书写学习</div>
-        </div>-->
-      </div>
+    </div>
+    <div class="learn-gif" v-show="!isShow" @click='learn($event)' tag='1'>
+      <img v-if="gif" id="gif" style="width: 100%;height: 42%">
+      <span v-else style="color: #ffffff;font-size: 20px">暂无图片</span>
     </div>
   </div>
 </template>
@@ -46,7 +52,8 @@
         currentMp3: '',
         index: 0,
         all: [],
-        cardId: ''
+        gif: null,
+        isShow: true
       }
     },
     components: {
@@ -74,7 +81,7 @@
               that.thumb = v.thumb
               that.index = index
               that.currentMp3 = v.mp3
-              that.cardId = v.id
+              that.gif = v.gif
             }
           })
         }
@@ -95,7 +102,7 @@
         this.index++
         this.thumb = this.all[this.index]['thumb']
         this.currentMp3 = this.all[this.index]['mp3']
-        this.cardId = this.all[this.index]['id']
+        this.gif = this.all[this.index]['gif']
         this.createAudio()
       },
       prevPage () {
@@ -107,14 +114,26 @@
         this.index--
         this.thumb = this.all[this.index]['thumb']
         this.currentMp3 = this.all[this.index]['mp3']
-        this.cardId = this.all[this.index]['id']
+        this.gif = this.all[this.index]['gif']
         this.createAudio()
       },
       back () {
         this.$router.push({path: '/list/' + this.$route.params.cid})
       },
-      learn () {
-        this.$router.push({path: '/learn/' + this.cardId})
+      learn (event) {
+        if (event.target.getAttribute('tag') === '1') {
+          this.isShow = !this.isShow
+          let gif = document.getElementById('gif')
+          if (this.isShow) {
+            if (gif) {
+              gif.src = ''
+            }
+          } else {
+            if (this.gif !== null) {
+              gif.src = this.host + 'Uploads/' + this.gif
+            }
+          }
+        }
       },
       createAudio () {
         if (!this.audio) {
@@ -208,14 +227,12 @@
     height: auto;
   }
 
-  .detail .content .wrapper .learn .learn-btn {
-    width: 100px;
-    height: 27px;
-    background: url("../assets/learn.png") no-repeat center;
-    background-size: 100%;
-    margin: 0 auto;
-    line-height: 28px;
-    color: #ffffff;
-    font-size: 14px;
+  .learn-gif {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #000000;
   }
 </style>
