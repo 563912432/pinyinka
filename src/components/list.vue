@@ -26,7 +26,7 @@
   import footer from '@/components/footer'
   import header from '@/components/header'
 
-  const Host = 'http://www.wdexam.com/Api/Pinyin/'
+  const Host = '/Api/Pinyin/'
   export default {
     name: 'list',
     components: {
@@ -43,26 +43,31 @@
       }
     },
     created () {
-      let that = this
-      this.cid = this.$route.params.cid
-      this.title = this.$route.params.title
-      let params = new URLSearchParams()
-      params.append('cid', this.cid)
+      let formdata = new FormData()
+      formdata.append('cid', this.$route.params.cid)
       this.loading = true
-      this.axios.post(Host + 'category', params).then(function (res) {
-        that.loading = false
-        if (res.data.status) {
-          that.category = res.data.info['category']
-          that.info = res.data.info['list']
+      let url = Host + 'category'
+      this.post(url, formdata, res => {
+        this.loading = false
+        if (res.status) {
+          this.category = res.info['category']
+          this.info = res.info['list']
+        } else {
+          console.log(res.info)
         }
-      }).catch(function (res) {
-        setTimeout(function () {
-          that.loading = false
-          console.log(res)
-        }, 1000)
       })
     },
     methods: {
+      post (url, data, fn) {         // datat应为'a=a1&b=b1'这种字符串格式，在jq里如果data为对象会自动将对象转成这种字符串格式
+        let obj = new XMLHttpRequest()
+        obj.open('POST', url, true)
+        obj.onreadystatechange = function () {
+          if (+obj.readyState === 4 && (+obj.status === 200 || +obj.status === 304 || +obj.status === 0)) {  // 304未修改
+            fn.call(this, JSON.parse(obj.responseText))
+          }
+        }
+        obj.send(data)
+      },
       detail (el) {
         let id = el.target.getAttribute('id')
         let cid = el.target.getAttribute('cid')
@@ -75,8 +80,9 @@
   @font-face {
     /* font-properties */
     font-family: pinyin;
-    src:url('/static/font/GBPinyinokB.ttf')
+    src: url('/static/font/GBPinyinokB.ttf')
   }
+
   .list {
     flex: 1;
     display: flex;
@@ -105,7 +111,8 @@
     color: #fff;
     text-decoration: none;
   }
-  .list .content .menu .menu-title img{
+
+  .list .content .menu .menu-title img {
     width: 13px;
     height: 13px;
     margin-bottom: -1px;
@@ -128,7 +135,8 @@
     color: #333333;
     font-weight: 400;
   }
-  .list .content .wrapper .w-content .box-card{
+
+  .list .content .wrapper .w-content .box-card {
     border-color: #e68540;
     box-shadow: 1px 2px 2px #d47c3c;
     margin-top: 10px;

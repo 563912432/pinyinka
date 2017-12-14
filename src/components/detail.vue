@@ -44,7 +44,7 @@
     name: 'detail',
     data () {
       return {
-        host: 'http://www.wdexam.com/',
+        host: '/',
         thumb: null,
         loading: false,
         audio: null,
@@ -67,32 +67,40 @@
       }
     },
     mounted () {
-      let that = this
-      let params = new URLSearchParams()
-      params.append('id', this.$route.params.id)
-      params.append('cid', this.$route.params.cid)
       this.loading = true
-      this.axios.post(this.host + 'Api/Pinyin/detail', params).then(function (res) {
-        that.loading = false
-        if (res.data.status) {
-          that.all = res.data.info
-          that.all.map((v, index) => {
-            if (v.id === that.$route.params.id) {
-              that.thumb = v.thumb
-              that.index = index
-              that.currentMp3 = v.mp3
-              that.gif = v.gif
+      let formdata = new FormData()
+      formdata.append('id', this.$route.params.id)
+      formdata.append('cid', this.$route.params.cid)
+      let url = this.host + 'Api/Pinyin/detail'
+      this.post(url, formdata, res => {
+        this.loading = false
+        if (res.status) {
+          this.all = res.info
+          this.all.map((v, index) => {
+            if (v.id === this.$route.params.id) {
+              this.thumb = v.thumb
+              this.index = index
+              this.currentMp3 = v.mp3
+              this.gif = v.gif
             }
           })
         }
-      }).catch(function (res) {
-        that.loading = false
       })
     },
     destroyed () {
       this.isPlay = false
     },
     methods: {
+      post (url, data, fn) {         // datat应为'a=a1&b=b1'这种字符串格式，在jq里如果data为对象会自动将对象转成这种字符串格式
+        let obj = new XMLHttpRequest()
+        obj.open('POST', url, true)
+        obj.onreadystatechange = function () {
+          if (+obj.readyState === 4 && (+obj.status === 200 || +obj.status === 304 || +obj.status === 0)) {  // 304未修改
+            fn.call(this, JSON.parse(obj.responseText))
+          }
+        }
+        obj.send(data)
+      },
       nextPage () {
         if (this.index >= this.all.length - 1) {
           console.log('end')
