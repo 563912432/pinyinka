@@ -11,6 +11,9 @@
           {{ item.title }}
         </li>
       </ul>
+      <div class="img-container" @click="videoPlay">
+        <img src="../assets/pyk.png" alt="">
+      </div>
     </div>
     <v-footer></v-footer>
   </div>
@@ -61,6 +64,9 @@
       click (el) {
         let cid = el.target.getAttribute('cid')
         this.$router.push({path: '/list/' + cid})
+      },
+      videoPlay () {
+        this.$router.push({path: '/introduce'})
       }
     }
   }
@@ -79,6 +85,7 @@
   }
 
   .hello .content {
+    z-index: 1;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -107,5 +114,18 @@
     background-color: #fff;
     margin: 3px;
     border-radius: 3px;
+  }
+
+  .hello .img-container {
+    width: 50%;
+    height: auto;
+    text-align: center;
+    align-self: center;
+    background-color: transparent;
+  }
+
+  .hello .img-container img {
+    width: 100%;
+    height: auto;
   }
 </style>

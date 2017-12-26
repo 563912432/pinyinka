@@ -19,6 +19,7 @@
     height: 40px;
     font-size: 12px;
     background-color: #a44902;
+    z-index: 1;
   }
   .footer .f-title{
     flex: 1;
