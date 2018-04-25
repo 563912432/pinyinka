@@ -5,7 +5,7 @@
 </template>
 <script>
   export default {
-    name: 'header'
+    name: 'py-header'
   }
 </script>
 <style scoped>
