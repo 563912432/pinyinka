@@ -17,8 +17,9 @@
     mounted () {
       let vid = 'dbadf91f040cf6660e82900b204e9800_d'
       this.get(this.host + 'Api/Video/getPolySign/code/' + vid, res => {
-        if (res.status) {
-          let polySign = JSON.parse(res.info)
+        let response = JSON.parse(res)
+        if (response.status) {
+          let polySign = JSON.parse(response.info)
           let videoHeight = 200
           let height = window.screen.height
           let viewHeight = window.innerHeight
@@ -34,7 +35,7 @@
           })
           this.player.j2s_resumeVideo()
         } else {
-          console.log(res.info)
+          console.log(response.info)
         }
       })
     },
