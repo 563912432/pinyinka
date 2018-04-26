@@ -16,7 +16,6 @@
     },
     mounted () {
       let vid = 'dbadf91f040cf6660e82900b204e9800_d'
-      console.log(this.host + 'Api/Video/getPolySign/code/' + vid)
       this.get(this.host + 'Api/Video/getPolySign/code/' + vid, res => {
         if (res.status) {
           let polySign = JSON.parse(res.info)
