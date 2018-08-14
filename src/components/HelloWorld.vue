@@ -15,6 +15,13 @@
         <img src="../assets/pyk.png" alt="">
       </div>
     </div>
+    <div @click="openSimpleDialog" class="b-button"></div>
+
+
+    <mu-dialog width="360" :open.sync="openSimple">
+      <img src="../assets/logo.png"/>
+      <mu-button slot="actions" flat color="primary" @click="closeSimpleDialog">关闭</mu-button>
+    </mu-dialog>
     <v-footer></v-footer>
   </div>
 </template>
@@ -23,7 +30,8 @@
   import footer from '@/components/footer'
   import header from '@/components/header'
 
-  const Host = '/Api/Pinyin/'
+  // const Host = '/Api/Pinyin/'
+  const Host = 'http://www.wenyunjy.com/Api/Pinyin/'
 
   export default {
     name: 'HelloWorld',
@@ -35,7 +43,8 @@
       return {
         msg: '',
         isParent: true,
-        loading: false
+        loading: false,
+        openSimple: false
       }
     },
     created () {
@@ -67,6 +76,14 @@
       },
       videoPlay () {
         this.$router.push({path: '/introduce'})
+      },
+      openSimpleDialog () {
+        $('.b-button').css('display','none')
+        this.openSimple = true
+      },
+      closeSimpleDialog () {
+        this.openSimple = false
+        $('.b-button').css('display','block')
       }
     }
   }
@@ -82,6 +99,17 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+  }
+
+  .b-button{
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    position: fixed;
+    right: 3px;
+    top: 37%;
+    background: bisque;
+    z-index: 2;
   }
 
   .hello .content {
