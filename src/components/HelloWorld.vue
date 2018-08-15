@@ -15,7 +15,9 @@
         <img src="../assets/pyk.png" alt="">
       </div>
     </div>
-    <div @click="openSimpleDialog" class="b-button"></div>
+    <div @click="openSimpleDialog" class="b-button">
+      <div class="b-close" @click.stop="bClose">×</div>
+    </div>
 
 
     <mu-dialog width="360" :open.sync="openSimple">
@@ -84,6 +86,9 @@
       closeSimpleDialog () {
         this.openSimple = false
         $('.b-button').css('display','block')
+      },
+      bClose () {
+        $('.b-button').css('display','none')
       }
     }
   }
@@ -110,6 +115,18 @@
     top: 37%;
     background: bisque;
     z-index: 2;
+  }
+
+  .b-close{
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    width: 10px;
+    height: 10px;
+    border-radius: 4px;
+    text-align: center;
+    line-height: 10px;
+    border: 1px solid #a1a1a1;
   }
 
   .hello .content {
