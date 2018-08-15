@@ -25,7 +25,7 @@
       </mu-avatar>
     </mu-chip>
 
-    <mu-dialog width="360" :open.sync="openSimple">
+    <mu-dialog :open.sync="openSimple">
       <img src="../assets/logo.png"/>
       <mu-button slot="actions" flat color="primary" @click="closeSimpleDialog">关闭</mu-button>
     </mu-dialog>
@@ -114,12 +114,10 @@
       },
       openSimpleDialog () {
         this.openSimple = true
-        // $('.b-button').css('display', 'none')
         this.closeDisplay = false
       },
       closeSimpleDialog () {
         this.openSimple = false
-        // $('.b-button').css('display', 'block')
         this.closeDisplay = true
         let data = new Date()
         let nowYear = data.getFullYear()
@@ -130,7 +128,6 @@
         window.localStorage.setItem('day', nowDay)
       },
       bClose () {
-        // $('.b-button').css('display', 'none')
         this.closeDisplay = false
       }
     }
