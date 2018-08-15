@@ -20,12 +20,12 @@
     <!--</div>-->
 
     <mu-chip v-show="closeDisplay" color="#E68540" id="b-button" @click="openSimpleDialog" class='b-button' @delete="bClose" delete>
-      <mu-avatar :size="32">
-        <img src="../assets/hengheng.png">
+      <mu-avatar :size="50">
+        <img src="../assets/hengheng50.png">
       </mu-avatar>
     </mu-chip>
 
-    <mu-dialog :open.sync="openSimple">
+    <mu-dialog :open.sync="openSimple" @close="closeSimpleDialog">
       <img src="../assets/logo.png"/>
       <mu-button slot="actions" flat color="primary" @click="closeSimpleDialog">关闭</mu-button>
     </mu-dialog>
@@ -135,7 +135,7 @@
 </script>
 <style>
   .mu-chip-delete-icon{
-    margin-bottom: 30px!important;
+    margin-bottom: 40px!important;
     margin-right: -20px!important;
     margin-left: 10px!important;
   }
@@ -157,13 +157,14 @@
   }
 
   .b-button{
-    height: 32px;
+    height: 50px;
     position: fixed;
     display: flex;
     align-items: center;
     right: 10px;
     z-index: 10;
     border: solid 1px #e0e0e0;
+    border-radius: 50%;
   }
 
   .b-close{
