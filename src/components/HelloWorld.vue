@@ -15,14 +15,15 @@
         <img src="../assets/pyk.png" alt="">
       </div>
     </div>
-<<<<<<< HEAD
-    <div @click="openSimpleDialog" class="b-button">
-      <div class="b-close" @click.stop="bClose">×</div>
-    </div>
-=======
-    <div id="b-button" @click="openSimpleDialog" class="b-button"></div>
->>>>>>> d3593cd239d5f64d6faf5955f875a1bcce8a5d57
+    <!--<div id="b-button" @click="openSimpleDialog" :class="['b-button',closeDisplay?'display-none':'display-show']">-->
+      <!--<div class="b-close" @click.stop="bClose">×</div>-->
+    <!--</div>-->
 
+    <mu-chip v-show="closeDisplay" color="#E68540" id="b-button" @click="openSimpleDialog" class='b-button' @delete="bClose" delete>
+      <mu-avatar :size="32">
+        <img src="../assets/hengheng.png">
+      </mu-avatar>
+    </mu-chip>
 
     <mu-dialog width="360" :open.sync="openSimple">
       <img src="../assets/logo.png"/>
@@ -50,7 +51,8 @@
         msg: '',
         isParent: true,
         loading: false,
-        openSimple: false
+        openSimple: false,
+        closeDisplay: true
       }
     },
     created () {
@@ -112,13 +114,13 @@
       },
       openSimpleDialog () {
         this.openSimple = true
+        // $('.b-button').css('display', 'none')
+        this.closeDisplay = false
       },
       closeSimpleDialog () {
         this.openSimple = false
-        $('.b-button').css('display','block')
-      },
-      bClose () {
-        $('.b-button').css('display','none')
+        // $('.b-button').css('display', 'block')
+        this.closeDisplay = true
         let data = new Date()
         let nowYear = data.getFullYear()
         let nowMonth = data.getMonth() + 1
@@ -126,11 +128,25 @@
         window.localStorage.setItem('year', nowYear)
         window.localStorage.setItem('month', nowMonth)
         window.localStorage.setItem('day', nowDay)
+      },
+      bClose () {
+        // $('.b-button').css('display', 'none')
+        this.closeDisplay = false
       }
     }
   }
 </script>
-
+<style>
+  .mu-chip-delete-icon{
+    margin-bottom: 30px!important;
+    margin-right: -20px!important;
+    margin-left: 10px!important;
+  }
+  .mu-chip .mu-avatar:first-child {
+    margin-left: -12px!important;
+    margin-right: -26px!important;
+  }
+</style>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   li {
@@ -144,20 +160,19 @@
   }
 
   .b-button{
-    width: 40px;
-    height: 40px;
-    border-radius: 4px;
+    height: 32px;
     position: fixed;
-    right: 3px;
-    /*top: 37%;*/
-    background: bisque;
-    z-index: 2;
+    display: flex;
+    align-items: center;
+    right: 10px;
+    z-index: 10;
+    border: solid 1px #e0e0e0;
   }
 
   .b-close{
     position: absolute;
-    right: 0px;
-    top: 0px;
+    right: 0;
+    top: 0;
     width: 10px;
     height: 10px;
     border-radius: 4px;

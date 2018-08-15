@@ -6,12 +6,14 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import 'muse-ui/dist/muse-ui.css'
-import { Dialog, Button } from 'muse-ui'
+import { Dialog, Button, Avatar, Chip } from 'muse-ui'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(Dialog)
 Vue.use(Button)
+Vue.use(Avatar)
+Vue.use(Chip)
 
 /* eslint-disable no-new */
 new Vue({
