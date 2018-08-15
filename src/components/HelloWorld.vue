@@ -15,7 +15,7 @@
         <img src="../assets/pyk.png" alt="">
       </div>
     </div>
-    <div @click="openSimpleDialog" class="b-button"></div>
+    <div id="b-button" @click="openSimpleDialog" class="b-button"></div>
 
 
     <mu-dialog width="360" :open.sync="openSimple">
@@ -31,7 +31,7 @@
   import header from '@/components/header'
 
   // const Host = '/Api/Pinyin/'
-  const Host = 'http://www.wenyunjy.com/Api/Pinyin/'
+  const Host = 'http://www.meili.com/Api/Pinyin/'
 
   export default {
     name: 'HelloWorld',
@@ -59,6 +59,33 @@
         }
       })
     },
+    mounted () {
+      let height = window.screen.height
+      let marginTop = height / 2 - 100
+      document.getElementById('b-button').style.top = marginTop + 'px'
+      let year = window.localStorage.getItem('year')
+      let month = window.localStorage.getItem('month')
+      let day = window.localStorage.getItem('day')
+      let data = new Date()
+      let nowYear = data.getFullYear()
+      let nowMonth = data.getMonth() + 1
+      let nowDay = data.getDate()
+      if (year && month && day) {
+        if (nowYear > year || nowMonth > month || nowDay > day) {
+          window.localStorage.setItem('status', 0)
+        } else {
+          window.localStorage.setItem('status', 1)
+        }
+      } else {
+        window.localStorage.setItem('status', 1)
+      }
+      let status = parseInt(window.localStorage.getItem('status'))
+      if (status) {
+        this.openSimple = false
+      } else {
+        this.openSimple = true
+      }
+    },
     methods: {
       post (url, data, fn) {         // datat应为'a=a1&b=b1'这种字符串格式，在jq里如果data为对象会自动将对象转成这种字符串格式
         let obj = new XMLHttpRequest()
@@ -78,12 +105,17 @@
         this.$router.push({path: '/introduce'})
       },
       openSimpleDialog () {
-        $('.b-button').css('display','none')
         this.openSimple = true
       },
       closeSimpleDialog () {
         this.openSimple = false
-        $('.b-button').css('display','block')
+        let data = new Date()
+        let nowYear = data.getFullYear()
+        let nowMonth = data.getMonth() + 1
+        let nowDay = data.getDate()
+        window.localStorage.setItem('year', nowYear)
+        window.localStorage.setItem('month', nowMonth)
+        window.localStorage.setItem('day', nowDay)
       }
     }
   }
@@ -107,7 +139,7 @@
     border-radius: 4px;
     position: fixed;
     right: 3px;
-    top: 37%;
+    /*top: 37%;*/
     background: bisque;
     z-index: 2;
   }
