@@ -17,7 +17,7 @@
     </div>
     <mu-chip v-show="closeDisplay" color="#E68540" id="b-button" @click="openSimpleDialog" class='b-button' @delete="bClose" delete>
       <mu-avatar :size="50">
-        <img src="../assets/timg.gif" style="border-radius: 5px;" />
+        <img src="../assets/hengheng50.png" style="border-radius: 5px;border: 1px #c8c8c8 solid;box-shadow: 1px 1px 5px #626262;" />
       </mu-avatar>
     </mu-chip>
     <mu-dialog :open.sync="openSimple" @close="closeSimpleDialog">
@@ -50,7 +50,7 @@
         loading: false,
         openSimple: false,
         closeDisplay: true,
-        bImgurl: 'static/img/logo.png',
+        bImgurl: 'static/img/404.jpg',
         adID: ''
       }
     },
