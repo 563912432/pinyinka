@@ -15,19 +15,15 @@
         <img src="../assets/pyk.png" alt="">
       </div>
     </div>
-    <!--<div id="b-button" @click="openSimpleDialog" :class="['b-button',closeDisplay?'display-none':'display-show']">-->
-      <!--<div class="b-close" @click.stop="bClose">×</div>-->
-    <!--</div>-->
-
     <mu-chip v-show="closeDisplay" color="#E68540" id="b-button" @click="openSimpleDialog" class='b-button' @delete="bClose" delete>
       <mu-avatar :size="50">
-        <img src="../assets/hengheng50.png">
+        <img src="../assets/timg.gif" style="border-radius: 5px;" />
       </mu-avatar>
     </mu-chip>
-
     <mu-dialog :open.sync="openSimple" @close="closeSimpleDialog">
-      <img src="../assets/logo.png"/>
-      <mu-button slot="actions" flat color="primary" @click="closeSimpleDialog">关闭</mu-button>
+      <router-link :to="{ name:'/adIndex',params: { adID: adID }}">
+        <img :src="bImgurl" class="b-img"/>
+      </router-link>
     </mu-dialog>
     <v-footer></v-footer>
   </div>
@@ -39,6 +35,7 @@
 
   // const Host = '/Api/Pinyin/'
   const Host = 'http://www.meili.com/Api/Pinyin/'
+  const Host1 = 'http://www.bdwenyunjy.com/'
 
   export default {
     name: 'HelloWorld',
@@ -52,7 +49,9 @@
         isParent: true,
         loading: false,
         openSimple: false,
-        closeDisplay: true
+        closeDisplay: true,
+        bImgurl: 'static/img/logo.png',
+        adID: ''
       }
     },
     created () {
@@ -61,7 +60,14 @@
       this.post(url, '', res => {
         this.loading = false
         if (res.status) {
-          this.msg = res.info
+          this.msg = res.info.tree
+          if (res.info.ad) {
+            this.adID = res.info.ad.id
+            this.bImgurl = Host1 + res.info.ad.thumb
+          } else {
+            this.closeDisplay = false
+            this.bImgurl = '/static/img/404.jpg'
+          }
         } else {
           console.log(res.info)
         }
@@ -134,6 +140,9 @@
   }
 </script>
 <style>
+  .b-img{
+    width: 100%;
+  }
   .mu-chip-delete-icon{
     margin-bottom: 40px!important;
     margin-right: -20px!important;
@@ -142,6 +151,9 @@
   .mu-chip .mu-avatar:first-child {
     margin-left: -12px!important;
     margin-right: -26px!important;
+  }
+  .mu-chip-delete-icon{
+    width: 15px;
   }
 </style>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
