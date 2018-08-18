@@ -24,6 +24,8 @@
       <router-link :to="{ name:'/adIndex',params: { adID: adID }}">
         <img :src="bImgurl" class="b-img"/>
       </router-link>
+      <!--<mu-button class="b-close" slot="actions" flat color="primary" @click="closeSimpleDialog">×</mu-button>-->
+      <div class="b-close" slot="actions" flat color="primary" @click="closeSimpleDialog">×</div>
     </mu-dialog>
     <v-footer></v-footer>
   </div>
@@ -75,7 +77,7 @@
     },
     mounted () {
       let height = window.screen.height
-      let marginTop = height / 2 - 100
+      let marginTop = height / 1 - 100
       document.getElementById('b-button').style.top = marginTop + 'px'
       let year = window.localStorage.getItem('year')
       let month = window.localStorage.getItem('month')
@@ -147,13 +149,14 @@
     margin-bottom: 40px!important;
     margin-right: -20px!important;
     margin-left: 10px!important;
+    width: 18px;
+    position: relative;
+    right: 48px;
+    bottom: 10px;
   }
   .mu-chip .mu-avatar:first-child {
     margin-left: -12px!important;
     margin-right: -26px!important;
-  }
-  .mu-chip-delete-icon{
-    width: 15px;
   }
 </style>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -180,15 +183,17 @@
   }
 
   .b-close{
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 10px;
-    height: 10px;
-    border-radius: 4px;
+    position: relative;
+    right: 45%;
+    top: 60px;
+    width: 25px;
+    height: 25px;
+    border-radius: 15px;
     text-align: center;
-    line-height: 10px;
-    border: 1px solid #a1a1a1;
+    line-height: 23px;
+    font-size: 25px;
+    color: #eee;
+    border: 1px solid #eee;
   }
 
   .hello .content {
