@@ -52,7 +52,7 @@
         isParent: true,
         loading: false,
         openSimple: false,
-        closeDisplay: true,
+        closeDisplay: false,
         bImgurl: 'static/img/404.jpg',
         adID: ''
       }
@@ -65,6 +65,7 @@
         if (res.status) {
           this.msg = res.info.tree
           if (res.info.ad) {
+            this.closeDisplay = true
             this.adID = res.info.ad.id
             this.bImgurl = Host1 + res.info.ad.thumb
           } else {
@@ -123,7 +124,7 @@
     padding: 10px 10px 10px !important;
   }
   .mu-dialog-wrapper .mu-dialog-actions{
-    margin-top: -10px !important;
+    margin-top: -20px !important;
     min-height: 0px !important;
     height: 0px !important;
   }
@@ -175,8 +176,8 @@
     text-align: center;
     line-height: 23px;
     font-size: 25px;
-    color: #000;
-    border: 1px solid #000;
+    color: #eee;
+    border: 1px solid #eee;
   }
 
   .hello .content {
