@@ -19,7 +19,8 @@
   import footer from '@/components/footer'
   import header from '@/components/header'
 
-  const Host1 = 'http://www.bdwenyunjy.com/'
+  const Host = '/Api/Pinyin/'
+  // const Host = 'http://www.bdwenyunjy.com/Api/Pinyin/'
 
   export default {
     name: "ad-index",
@@ -34,7 +35,7 @@
       }
     },
     created () {
-      this.get(Host1 + 'Api/Pinyin/getAd/id/' + this.$route.params.adID, res => {
+      this.get(Host + '/getAd/id/' + this.$route.params.adID, res => {
         let adres = JSON.parse(res)
         if (adres.status) {
           this.text = adres.info.content
@@ -93,6 +94,7 @@
     z-index: 1;
     flex: 1;
     display: flex;
+    bottom: 100px;
     flex-direction: column;
     overflow-y: auto;
   }

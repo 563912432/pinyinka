@@ -6,7 +6,7 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import 'muse-ui/dist/muse-ui.css'
-import { Dialog, Button, Avatar, Chip } from 'muse-ui'
+import {Dialog, Button, Avatar, Chip} from 'muse-ui'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
@@ -15,10 +15,17 @@ Vue.use(Button)
 Vue.use(Avatar)
 Vue.use(Chip)
 
+router.beforeEach((to, from, next) => {
+  // 统计代码
+  if (to.path) {
+    _hmt.push(['_trackPageview', location.pathname + '#/' + to.fullPath])
+  }
+  next()
+})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   template: '<App/>',
-  components: { App }
+  components: {App}
 })

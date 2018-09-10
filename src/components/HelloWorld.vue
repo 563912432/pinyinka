@@ -15,7 +15,7 @@
         <img src="../assets/pyk.png" alt="">
       </div>
     </div>
-    <mu-chip v-show="closeDisplay" color="#E68540" id="b-button" @click="openSimpleDialog" class='b-button' @delete="bClose" delete>
+    <mu-chip v-if="closeDisplay" color="#E68540" @click="openSimpleDialog" class='b-button' @delete="bClose" delete>
       <mu-avatar :size="50">
         <img src="../assets/hengheng50.png" style="border-radius: 5px;border: 1px #c8c8c8 solid;box-shadow: 1px 1px 5px #626262;" />
       </mu-avatar>
@@ -35,9 +35,10 @@
   import footer from '@/components/footer'
   import header from '@/components/header'
 
-  // const Host = '/Api/Pinyin/'
-  const Host = 'http://www.meili.com/Api/Pinyin/'
-  const Host1 = 'http://www.bdwenyunjy.com/'
+  const Host = '/Api/Pinyin/'
+  // const Host1 = 'http://www.bdwenyunjy.com/Api/Pinyin/'
+  // const Host2 = 'http://www.bdwenyunjy.com/'
+  const Host1 = '/'
 
   export default {
     name: 'HelloWorld',
@@ -74,33 +75,6 @@
           console.log(res.info)
         }
       })
-    },
-    mounted () {
-      let height = window.screen.height
-      let marginTop = height / 1 - 100
-      document.getElementById('b-button').style.top = marginTop + 'px'
-      let year = window.localStorage.getItem('year')
-      let month = window.localStorage.getItem('month')
-      let day = window.localStorage.getItem('day')
-      let data = new Date()
-      let nowYear = data.getFullYear()
-      let nowMonth = data.getMonth() + 1
-      let nowDay = data.getDate()
-      if (year && month && day) {
-        if (nowYear > year || nowMonth > month || nowDay > day) {
-          window.localStorage.setItem('status', 0)
-        } else {
-          window.localStorage.setItem('status', 1)
-        }
-      } else {
-        window.localStorage.setItem('status', 1)
-      }
-      let status = parseInt(window.localStorage.getItem('status'))
-      if (status) {
-        this.openSimple = false
-      } else {
-        this.openSimple = true
-      }
     },
     methods: {
       post (url, data, fn) {         // datat应为'a=a1&b=b1'这种字符串格式，在jq里如果data为对象会自动将对象转成这种字符串格式
@@ -145,6 +119,14 @@
   .b-img{
     width: 100%;
   }
+  .mu-dialog-wrapper .mu-dialog-body{
+    padding: 10px 10px 10px !important;
+  }
+  .mu-dialog-wrapper .mu-dialog-actions{
+    margin-top: -10px !important;
+    min-height: 0px !important;
+    height: 0px !important;
+  }
   .mu-chip-delete-icon{
     margin-bottom: 40px!important;
     margin-right: -20px!important;
@@ -174,6 +156,7 @@
   .b-button{
     height: 50px;
     position: fixed;
+    bottom: 100px;
     display: flex;
     align-items: center;
     right: 10px;
@@ -185,15 +168,15 @@
   .b-close{
     position: relative;
     right: 45%;
-    top: 60px;
     width: 25px;
     height: 25px;
+    top: 45px;
     border-radius: 15px;
     text-align: center;
     line-height: 23px;
     font-size: 25px;
-    color: #eee;
-    border: 1px solid #eee;
+    color: #000;
+    border: 1px solid #000;
   }
 
   .hello .content {
