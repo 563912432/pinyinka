@@ -35,7 +35,7 @@
   import footer from '@/components/footer'
   import header from '@/components/header'
 
-  const Host = '/Api/Pinyin/'
+  const Host = 'http://www.wenyunjy.com/Api/Pinyin/'
   // const Host1 = 'http://www.bdwenyunjy.com/Api/Pinyin/'
   // const Host2 = 'http://www.bdwenyunjy.com/'
   const Host1 = '/'
@@ -76,6 +76,30 @@
           console.log(res.info)
         }
       })
+    },
+    mounted () {
+      let year = window.localStorage.getItem('year')
+      let month = window.localStorage.getItem('month')
+      let day = window.localStorage.getItem('day')
+      let data = new Date()
+      let nowYear = data.getFullYear()
+      let nowMonth = data.getMonth() + 1
+      let nowDay = data.getDate()
+      if (year && month && day) {
+        if (nowYear > year || nowMonth > month || nowDay > day) {
+          window.localStorage.setItem('status', 0)
+        } else {
+          window.localStorage.setItem('status', 1)
+        }
+      } else {
+        window.localStorage.setItem('status', 0)
+      }
+      let status = parseInt(window.localStorage.getItem('status'))
+      if (status) {
+        this.openSimple = false
+      } else {
+        this.openSimple = true
+      }
     },
     methods: {
       post (url, data, fn) {         // datat应为'a=a1&b=b1'这种字符串格式，在jq里如果data为对象会自动将对象转成这种字符串格式
