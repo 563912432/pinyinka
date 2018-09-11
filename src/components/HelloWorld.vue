@@ -35,7 +35,7 @@
   import footer from '@/components/footer'
   import header from '@/components/header'
 
-  const Host = 'http://www.wenyunjy.com/Api/Pinyin/'
+  const Host = '/Api/Pinyin/'
   // const Host1 = 'http://www.bdwenyunjy.com/Api/Pinyin/'
   // const Host2 = 'http://www.bdwenyunjy.com/'
   const Host1 = '/'
