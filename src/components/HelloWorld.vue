@@ -95,11 +95,7 @@
         window.localStorage.setItem('status', 0)
       }
       let status = parseInt(window.localStorage.getItem('status'))
-      if (status) {
-        this.openSimple = false
-      } else {
-        this.openSimple = true
-      }
+      this.openSimple = !status
     },
     methods: {
       post (url, data, fn) {         // datat应为'a=a1&b=b1'这种字符串格式，在jq里如果data为对象会自动将对象转成这种字符串格式
