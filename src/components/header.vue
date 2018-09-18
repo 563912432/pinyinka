@@ -1,11 +1,23 @@
 <template>
-  <div class="header">
+  <div class="header" @click="toUrl">
     <img src="../assets/header.png" alt="">
   </div>
 </template>
 <script>
   export default {
-    name: 'py-header'
+    name: 'py-header',
+    props: {
+      url: {
+        type: String
+      }
+    },
+    methods: {
+      toUrl: function () {
+        if (this.url) {
+          this.$router.push(`/introduce/${this.url}`)
+        }
+      }
+    }
   }
 </script>
 <style scoped>
@@ -13,7 +25,7 @@
     height: 75px;
     width: 100%;
     padding: 0;
-    z-index: 1;
+    z-index: 100;
   }
   .header img{
     height: 100%;

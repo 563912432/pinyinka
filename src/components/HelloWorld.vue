@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <v-header></v-header>
+    <v-header :url="info.topVideo"></v-header>
     <div class="content">
       <ul v-loading.body="loading">
         <li :class="item.pid == '41'?'parent':'child'"
@@ -11,22 +11,24 @@
           {{ item.title }}
         </li>
       </ul>
-      <div class="img-container" @click="videoPlay">
-        <img src="../assets/pyk.png" alt="">
+      <!--顶图广告位-->
+      <div class="img-container" v-if="info.adInfo && timeTo13(info.adInfo.start) < timeNow && timeTo13(info.adInfo.end) > timeNow"  @click="topAdClick(info.adInfo.type, info.adInfo.video_url, info.adInfo.content)">
+        <img :src="info.adInfo.thumb?host + 'Uploads/' + info.adInfo.thumb:''" alt="">
+      </div>
+      <!--推荐广告位-->
+      <div class="tuijian-container">
+        <div class="tuijian-parent" v-for="(item, index) in bottomAd" :key="index" v-if="timeStringToStamp(item.start_bottom) < timeNow && timeStringToStamp(item.end_bottom) > timeNow">
+          <img :src="item.thumb1?host + 'Uploads/' +item.thumb1:''" alt="" @click="tuijianClick(item.bottom_type, item.contentActivity, item.top_href_video)">
+        </div>
+        <div style="clear: both"></div>
       </div>
     </div>
-    <mu-chip v-if="closeDisplay" color="#E68540" @click="openSimpleDialog" class='b-button' @delete="bClose" delete>
-      <mu-avatar :size="50">
-        <img src="../assets/hengheng50.png" style="border-radius: 5px;border: 1px #c8c8c8 solid;box-shadow: 1px 1px 5px #626262;" />
-      </mu-avatar>
-    </mu-chip>
-    <mu-dialog :open.sync="openSimple" @close="closeSimpleDialog">
-      <router-link :to="{ name:'/adIndex',params: { adID: adID }}">
-        <img :src="bImgurl" class="b-img"/>
-      </router-link>
-      <!--<mu-button class="b-close" slot="actions" flat color="primary" @click="closeSimpleDialog">×</mu-button>-->
-      <div class="b-close" slot="actions" flat color="primary" @click="closeSimpleDialog">×</div>
-    </mu-dialog>
+    <div v-if="info.adInfo && openSimple && info.adInfo.logo" class="logo">
+      <div class='b-button' @click="topAdClick(info.adInfo.type, info.adInfo.video_url, info.adInfo.content)">
+        <img :src="host + 'Uploads/' +info.adInfo.logo" alt="">
+      </div>
+      <div class="btnClose" @click="bClose">X</div>
+    </div>
     <v-footer></v-footer>
   </div>
 </template>
@@ -34,11 +36,9 @@
 <script>
   import footer from '@/components/footer'
   import header from '@/components/header'
+  import {mapState} from 'vuex'
 
   const Host = '/Api/Pinyin/'
-  // const Host1 = 'http://www.bdwenyunjy.com/Api/Pinyin/'
-  // const Host2 = 'http://www.bdwenyunjy.com/'
-  const Host1 = '/'
 
   export default {
     name: 'HelloWorld',
@@ -46,15 +46,30 @@
       'v-footer': footer,
       'v-header': header
     },
+    computed: {
+      timeNow () {
+        return Date.parse(new Date())
+      },
+      ...mapState(['adCate'])
+    },
     data () {
       return {
-        msg: '',
+        host: '/',
+        info: {
+          topAdUrl: '',
+          adInfo: {
+            thumb: '',
+            logo: '',
+            content: '',
+            ad: ''
+          }
+        }, // 全部信息
+        msg: '', // tree数据
+        bottomAd: [],
+        // topAdUrl: '',
         isParent: true,
         loading: false,
-        openSimple: false,
-        closeDisplay: false,
-        bImgurl: 'static/img/404.jpg',
-        adID: ''
+        openSimple: false
       }
     },
     created () {
@@ -63,14 +78,15 @@
       this.post(url, '', res => {
         this.loading = false
         if (res.status) {
-          this.msg = res.info.tree
-          if (res.info.ad) {
-            this.closeDisplay = true
-            this.adID = res.info.ad.id
-            this.bImgurl = Host1 + res.info.ad.thumb
-          } else {
-            this.closeDisplay = false
-            this.bImgurl = '/static/img/404.jpg'
+          this.info = res.info
+          if (res.info.adInfo && res.info.adInfo.content) {
+            this.$store.commit('saveTopContent', res.info.adInfo.content)
+          }
+          if (res.info.tree) {
+            this.msg = res.info.tree
+          }
+          if (res.info.adInfo && res.info.adInfo.ad) {
+            this.bottomAd = JSON.parse(res.info.adInfo.ad)
           }
         } else {
           console.log(res.info)
@@ -78,26 +94,45 @@
       })
     },
     mounted () {
-      let year = window.localStorage.getItem('year')
-      let month = window.localStorage.getItem('month')
-      let day = window.localStorage.getItem('day')
-      let data = new Date()
-      let nowYear = data.getFullYear()
-      let nowMonth = data.getMonth() + 1
-      let nowDay = data.getDate()
-      if (year && month && day) {
-        if (nowYear > year || nowMonth > month || nowDay > day) {
-          window.localStorage.setItem('status', 0)
-        } else {
-          window.localStorage.setItem('status', 1)
-        }
-      } else {
-        window.localStorage.setItem('status', 0)
-      }
-      let status = parseInt(window.localStorage.getItem('status'))
-      this.openSimple = !status
+      // 取cookie
+      this.openSimple = !this.$cookie.get('pinyinka')
     },
     methods: {
+      topAdClick (type, hrefVideo, content) {
+        switch (parseInt(type)) {
+          case 1: // 链接网址
+            window.location.href = hrefVideo
+            break
+          case 2: // 视频代码
+            this.$router.push(`/introduce/${hrefVideo}`)
+            break
+          case 3: // 活动详情
+            this.$store.commit('saveTopContent', content)
+            this.$router.push(`adDetail/${this.adCate.topAd}`)
+            break
+          default:
+            break
+        }
+      },
+      tuijianClick (type, content, hrefVideo) {
+        switch (parseInt(type)) {
+          case 1: // 链接地址
+            window.location.href = hrefVideo
+            break
+          case 2: // 活动详情
+            this.$store.commit('saveTuiJianContent', content)
+            this.$router.push(`adDetail/${this.adCate.tuijianAd}`)
+            break
+          default:
+            break
+        }
+      },
+      timeTo13 (number10) {
+        return parseInt(number10 + '000')
+      },
+      timeStringToStamp (string) {
+        return (new Date(Date.parse(string.replace(/-/g, '/')))).getTime()
+      },
       post (url, data, fn) {         // datat应为'a=a1&b=b1'这种字符串格式，在jq里如果data为对象会自动将对象转成这种字符串格式
         let obj = new XMLHttpRequest()
         obj.open('POST', url, true)
@@ -112,26 +147,9 @@
         let cid = el.target.getAttribute('cid')
         this.$router.push({path: '/list/' + cid})
       },
-      videoPlay () {
-        this.$router.push({path: '/introduce'})
-      },
-      openSimpleDialog () {
-        this.openSimple = true
-        this.closeDisplay = false
-      },
-      closeSimpleDialog () {
-        this.openSimple = false
-        this.closeDisplay = true
-        let data = new Date()
-        let nowYear = data.getFullYear()
-        let nowMonth = data.getMonth() + 1
-        let nowDay = data.getDate()
-        window.localStorage.setItem('year', nowYear)
-        window.localStorage.setItem('month', nowMonth)
-        window.localStorage.setItem('day', nowDay)
-      },
       bClose () {
-        this.closeDisplay = false
+        this.openSimple = false
+        this.$cookie.set('pinyinka', 'Helloworld', parseInt(this.info.adInfo.interval))
       }
     }
   }
@@ -139,27 +157,6 @@
 <style>
   .b-img{
     width: 100%;
-  }
-  .mu-dialog-wrapper .mu-dialog-body{
-    padding: 10px 10px 10px !important;
-  }
-  .mu-dialog-wrapper .mu-dialog-actions{
-    margin-top: -20px !important;
-    min-height: 0px !important;
-    height: 0px !important;
-  }
-  .mu-chip-delete-icon{
-    margin-bottom: 40px!important;
-    margin-right: -20px!important;
-    margin-left: 10px!important;
-    width: 18px;
-    position: relative;
-    right: 48px;
-    bottom: 10px;
-  }
-  .mu-chip .mu-avatar:first-child {
-    margin-left: -12px!important;
-    margin-right: -26px!important;
   }
 </style>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -174,42 +171,45 @@
     flex-direction: column;
   }
 
-  .b-button{
-    height: 50px;
+  .logo{
+    width: 70px;
+    height: 75px;
     position: fixed;
-    bottom: 100px;
+    background-color: transparent;
+    right: 0;
+    bottom: 10%;
+    z-index: 10;
+  }
+  .logo .b-button{
+    width: 50px;
+    height: 50px;
+    margin: 0 auto;
     display: flex;
     align-items: center;
-    right: 10px;
-    z-index: 10;
     border: solid 1px #e0e0e0;
-    border-radius: 50%;
+    border-radius: 3px;
+    overflow: hidden;
   }
-
-  .b-close{
-    position: relative;
-    right: 45%;
-    width: 25px;
-    height: 25px;
-    top: 45px;
-    border-radius: 15px;
-    text-align: center;
-    line-height: 23px;
-    font-size: 25px;
+  .logo .btnClose{
+    width: 20px;
+    height: 20px;
+    line-height:20px;
+    margin:5px auto 0;
+    text-align:center;
     color: #eee;
-    border: 1px solid #eee;
+    border-radius:50%;
+    border: solid 1px #eee
   }
-
   .hello .content {
     z-index: 1;
     flex: 1;
-    display: flex;
-    flex-direction: column;
     overflow-y: auto;
+    overflow-x: hidden;
     margin-top: -15px;
   }
 
   .hello .content ul {
+    width: 100%;
     margin: 0;
     padding: 0;
   }
@@ -233,15 +233,44 @@
   }
 
   .hello .img-container {
-    width: 50%;
+    width: 100%;
     height: auto;
     text-align: center;
     align-self: center;
     background-color: transparent;
+    margin-top: 5px;
   }
 
   .hello .img-container img {
     width: 100%;
+    height: 100%;
+  }
+  .hello .tuijian-container {
+    width: 100%;
+    text-align: center;
+    background-color: #ffffff;
+  }
+  .hello .tuijian-container .tuijian-parent{
+    width: 49%;
+    padding: 2px 1px 2px 2px;
     height: auto;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    float: left
+  }
+  .hello .tuijian-container .tuijian-parent:nth-child(2){
+    padding: 2px 2px 2px 1px;
+  }
+  .hello .tuijian-container .tuijian-parent:nth-child(3){
+    padding: 0 1px 2px 2px;
+  }
+  .hello .tuijian-container .tuijian-parent:nth-child(4){
+    padding: 0 2px 2px 1px;
+  }
+  .hello .tuijian-container img {
+    width: 100%;
+    height: 100%;
   }
 </style>

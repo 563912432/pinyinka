@@ -4,7 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 import list from '@/components/list'
 import detail from '@/components/detail'
 import introduce from '@/components/introduce'
-import adIndex from '@/components/adIndex'
+import adDetail from '@/components/adDetail'
 
 Vue.use(Router)
 
@@ -26,14 +26,14 @@ export default new Router({
       component: detail
     },
     {
-      path: '/introduce',
+      path: '/introduce/:url',
       name: '/introduce',
       component: introduce
     },
     {
-      path: '/adIndex/:adID',
-      name: '/adIndex',
-      component: adIndex
+      path: '/adDetail/:type',
+      name: '/adDetail',
+      component: adDetail
     }
   ]
 })
