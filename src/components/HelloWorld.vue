@@ -12,8 +12,8 @@
         </li>
       </ul>
       <!--顶图广告位-->
-      <div class="img-container" v-if="info.adInfo && timeTo13(info.adInfo.start) < timeNow && timeTo13(info.adInfo.end) > timeNow"  @click="topAdClick(info.adInfo.type, info.adInfo.video_url, info.adInfo.content)">
-        <img :src="info.adInfo.thumb?host + 'Uploads/' + info.adInfo.thumb:''" alt="">
+      <div class="img-container" v-if="info.adInfo && timeTo13(info.adInfo.start) < timeNow && timeTo13(info.adInfo.end) > timeNow">
+        <img :src="info.adInfo.thumb?host + 'Uploads/' + info.adInfo.thumb:''" alt="" @click="topAdClick(info.adInfo.type, info.adInfo.video_url, info.adInfo.content)">
       </div>
       <!--推荐广告位-->
       <div class="tuijian-container">

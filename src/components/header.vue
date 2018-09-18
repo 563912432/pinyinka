@@ -1,6 +1,6 @@
 <template>
-  <div class="header" @click="toUrl">
-    <img src="../assets/header.png" alt="">
+  <div class="header">
+    <img src="../assets/header.png"  @click="toUrl" alt="">
   </div>
 </template>
 <script>
