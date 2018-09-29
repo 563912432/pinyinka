@@ -13,18 +13,19 @@
       </ul>
       <!--顶图广告位-->
       <div class="img-container" v-if="info.adInfo && timeTo13(info.adInfo.start) < timeNow && timeTo13(info.adInfo.end) > timeNow">
-        <img :src="info.adInfo.thumb?host + 'Uploads/' + info.adInfo.thumb:''" alt="" @click="topAdClick(info.adInfo.type, info.adInfo.video_url, info.adInfo.content)">
+        <img :src="info.adInfo.thumb?host + 'Uploads/' + info.adInfo.thumb:''" alt="" @click="topAdClick(info.adInfo.type, info.adInfo.video_url, info.adInfo.content, 'top')">
       </div>
       <!--推荐广告位-->
-      <div class="tuijian-container">
-        <div class="tuijian-parent" v-for="(item, index) in bottomAd" :key="index" v-if="timeStringToStamp(item.start_bottom) < timeNow && timeStringToStamp(item.end_bottom) > timeNow">
-          <img :src="item.thumb1?host + 'Uploads/' +item.thumb1:''" alt="" @click="tuijianClick(item.bottom_type, item.contentActivity, item.top_href_video)">
+      <div class="tuijian-container" v-if="info.adInfo && timeTo13(info.adInfo.start) < timeNow && timeTo13(info.adInfo.end) > timeNow">
+        <div class="tuijian-parent" v-for="(item, index) in bottomAd" :key="index">
+          <img :src="item.thumb1?host + 'Uploads/' +item.thumb1:''" alt="" @click="tuijianClick(item.bottom_type, item.contentActivity, item.top_href_video, index)">
         </div>
         <div style="clear: both"></div>
       </div>
     </div>
-    <div v-if="info.adInfo && openSimple && info.adInfo.logo" class="logo">
-      <div class='b-button' @click="topAdClick(info.adInfo.type, info.adInfo.video_url, info.adInfo.content)">
+    <!--logo-->
+    <div v-if="info.adInfo && openSimple && info.adInfo.logo && timeTo13(info.adInfo.start) < timeNow && timeTo13(info.adInfo.end) > timeNow" class="logo">
+      <div class='b-button' @click="topAdClick(info.adInfo.type, info.adInfo.video_url, info.adInfo.content, 'logo')">
         <img :src="host + 'Uploads/' +info.adInfo.logo" alt="">
       </div>
       <div class="btnClose" @click="bClose">X</div>
@@ -55,6 +56,7 @@
     data () {
       return {
         host: '/',
+        cardId: '',
         info: {
           topAdUrl: '',
           adInfo: {
@@ -79,6 +81,7 @@
         this.loading = false
         if (res.status) {
           this.info = res.info
+          this.cardId = this.info.card_id
           if (res.info.adInfo && res.info.adInfo.content) {
             this.$store.commit('saveTopContent', res.info.adInfo.content)
           }
@@ -98,7 +101,8 @@
       this.openSimple = !this.$cookie.get('pinyinka')
     },
     methods: {
-      topAdClick (type, hrefVideo, content) {
+      // logo的点击事件
+      topAdClick (type, hrefVideo, content, tag) {
         switch (parseInt(type)) {
           case 1: // 链接网址
             window.location.href = hrefVideo
@@ -113,8 +117,20 @@
           default:
             break
         }
+        let formdata = new FormData()
+        formdata.append('cardId', this.cardId)
+        let url = ''
+        if (tag === 'logo') { // logo统计
+          url = Host + 'logoNum'
+        }
+        if (tag === 'top') { // top统计
+          url = Host + 'topNum'
+        }
+        this.post(url, formdata, res => {
+          console.log(res.info)
+        })
       },
-      tuijianClick (type, content, hrefVideo) {
+      tuijianClick (type, content, hrefVideo, index) {
         switch (parseInt(type)) {
           case 1: // 链接地址
             window.location.href = hrefVideo
@@ -126,6 +142,13 @@
           default:
             break
         }
+        let url = Host + 'bottomNum'
+        let formdata = new FormData()
+        formdata.append('cardId', this.cardId)
+        formdata.append('index', index)
+        this.post(url, formdata, res => {
+          console.log(res.info)
+        })
       },
       timeTo13 (number10) {
         return parseInt(number10 + '000')
