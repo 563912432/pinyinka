@@ -8,6 +8,14 @@ const store = new Vuex.Store({
       topAd: 1,
       tuijianAd: 2
     },
+    adType: {
+      logo: 1,
+      top: 2,
+      bottom1: 3,
+      bottom2: 4,
+      bottom3: 5,
+      bottom4: 6
+    },
     // 顶层广告位的内容
     topContent: '',
     // 推荐广告位的内容

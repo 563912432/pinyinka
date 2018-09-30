@@ -51,12 +51,13 @@
       timeNow () {
         return Date.parse(new Date())
       },
-      ...mapState(['adCate'])
+      ...mapState(['adCate', 'adType'])
     },
     data () {
       return {
         host: '/',
-        cardId: '',
+        cardId: '', // 卡片id
+        uid: '', // 用户标识
         info: {
           topAdUrl: '',
           adInfo: {
@@ -82,6 +83,14 @@
         if (res.status) {
           this.info = res.info
           this.cardId = this.info.card_id
+          // 取localStorage
+          let uid = window.localStorage.getItem('user')
+          if (uid) {
+            this.uid = uid
+          } else {
+            this.uid = this.info.uid
+            window.localStorage.setItem('user', this.uid)
+          }
           if (res.info.adInfo && res.info.adInfo.content) {
             this.$store.commit('saveTopContent', res.info.adInfo.content)
           }
@@ -119,14 +128,14 @@
         }
         let formdata = new FormData()
         formdata.append('cardId', this.cardId)
-        let url = ''
+        formdata.append('uid', this.uid)
         if (tag === 'logo') { // logo统计
-          url = Host + 'logoNum'
+          formdata.append('tag', this.adType.logo)
         }
         if (tag === 'top') { // top统计
-          url = Host + 'topNum'
+          formdata.append('tag', this.adType.top)
         }
-        this.post(url, formdata, res => {
+        this.post(`${Host}adStatistic`, formdata, res => {
           console.log(res.info)
         })
       },
@@ -142,10 +151,26 @@
           default:
             break
         }
-        let url = Host + 'bottomNum'
+        let url = Host + 'adStatistic'
         let formdata = new FormData()
         formdata.append('cardId', this.cardId)
-        formdata.append('index', index)
+        formdata.append('uid', this.uid)
+        let tag = 'bottom' + (index + 1)
+        switch (tag) {
+          case 'bottom1':
+            tag = this.adType.bottom1
+            break
+          case 'bottom2':
+            tag = this.adType.bottom2
+            break
+          case 'bottom3':
+            tag = this.adType.bottom3
+            break
+          case 'bottom4':
+            tag = this.adType.bottom4
+            break
+        }
+        formdata.append('tag', tag)
         this.post(url, formdata, res => {
           console.log(res.info)
         })
