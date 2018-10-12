@@ -39,7 +39,7 @@
   import header from '@/components/header'
   import {mapState} from 'vuex'
 
-  const Host = 'http://www.meili.com/Api/Pinyin/'
+  const Host = '/Api/Pinyin/'
 
   export default {
     name: 'HelloWorld',
@@ -55,7 +55,7 @@
     },
     data () {
       return {
-        host: 'http://www.meili.com/',
+        host: '/',
         cardId: '', // 卡片id
         uid: '', // 用户标识
         info: {
