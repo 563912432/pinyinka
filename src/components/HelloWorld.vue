@@ -16,7 +16,7 @@
         <img :src="info.adInfo.thumb?host + 'Uploads/' + info.adInfo.thumb:''" alt="" @click="topAdClick(info.adInfo.type, info.adInfo.video_url, info.adInfo.content, 'top')">
       </div>
       <!--推荐广告位-->
-      <div class="tuijian-container" v-if="info.adInfo && bottomAd[0].thumb1 !== '' && timeTo13(info.adInfo.start) < timeNow && timeTo13(info.adInfo.end) > timeNow">
+      <div class="tuijian-container" v-if="info.adInfo && bottomAd[0] && bottomAd[0].thumb1 !== '' && timeTo13(info.adInfo.start) < timeNow && timeTo13(info.adInfo.end) > timeNow">
         <div class="tuijian-parent" v-for="(item, index) in bottomAd" :key="index">
           <img :src="item.thumb1?host + 'Uploads/' +item.thumb1:''" alt="" @click="tuijianClick(item.bottom_type, item.contentActivity, item.top_href_video, index)">
         </div>
@@ -39,7 +39,7 @@
   import header from '@/components/header'
   import {mapState} from 'vuex'
 
-  const Host = '/Api/Pinyin/'
+  const Host = 'http://www.meili.com/Api/Pinyin/'
 
   export default {
     name: 'HelloWorld',
@@ -55,7 +55,7 @@
     },
     data () {
       return {
-        host: '/',
+        host: 'http://www.meili.com/',
         cardId: '', // 卡片id
         uid: '', // 用户标识
         info: {
@@ -244,9 +244,9 @@
     line-height:20px;
     margin:5px auto 0;
     text-align:center;
-    color: #eee;
+    color: #FF0000;
     border-radius:50%;
-    border: solid 1px #eee
+    border: solid 1px #FF0000
   }
   .hello .content {
     z-index: 1;
