@@ -12,19 +12,22 @@
         </li>
       </ul>
       <!--顶图广告位-->
-      <div class="img-container" v-if="info.adInfo && timeTo13(info.adInfo.start) < timeNow && timeTo13(info.adInfo.end) > timeNow">
+      <div class="img-container" v-if="info.adInfo">
         <img :src="info.adInfo.thumb?host + 'Uploads/' + info.adInfo.thumb:''" alt="" @click="topAdClick(info.adInfo.type, info.adInfo.video_url, info.adInfo.content, 'top')">
       </div>
       <!--推荐广告位-->
-      <div class="tuijian-container" v-if="info.adInfo && bottomAd[0] && bottomAd[0].thumb1 !== '' && timeTo13(info.adInfo.start) < timeNow && timeTo13(info.adInfo.end) > timeNow">
+      <div class="tuijian-container" v-if="info.adInfo && bottomAd[0] && bottomAd[0].thumb1 !== ''">
         <div class="tuijian-parent" v-for="(item, index) in bottomAd" :key="index">
           <img :src="item.thumb1?host + 'Uploads/' +item.thumb1:''" alt="" @click="tuijianClick(item.bottom_type, item.contentActivity, item.top_href_video, index)">
+          <div class="tuijian-title">
+            {{item.adTitle}}
+          </div>
         </div>
         <div style="clear: both"></div>
       </div>
     </div>
     <!--logo-->
-    <div v-if="info.adInfo && openSimple && info.adInfo.logo && timeTo13(info.adInfo.start) < timeNow && timeTo13(info.adInfo.end) > timeNow" class="logo">
+    <div v-if="info.adInfo && openSimple && info.adInfo.logo" class="logo">
       <div class='b-button' @click="topAdClick(info.adInfo.type, info.adInfo.video_url, info.adInfo.content, 'logo')">
         <img :src="host + 'Uploads/' +info.adInfo.logo" alt="">
       </div>
@@ -286,7 +289,8 @@
     text-align: center;
     align-self: center;
     background-color: transparent;
-    margin-top: 5px;
+    margin-top: 15px;
+    margin-bottom: 15px;
   }
 
   .hello .img-container img {
@@ -296,27 +300,46 @@
   .hello .tuijian-container {
     width: 100%;
     text-align: center;
-    background-color: #ffffff;
+    background-color: transparent;
   }
   .hello .tuijian-container .tuijian-parent{
-    width: 49%;
-    padding: 2px 1px 2px 2px;
+    box-sizing: border-box;
+    width: 45.5%;
+    margin-left: 3%;
+    margin-right: 3%;
+    margin-bottom: 3%;
     height: auto;
     background-color: #ffffff;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    /*align-items: center;*/
     justify-content: center;
-    float: left
+    float: left;
+    border-radius: 10px;
+    padding: 10px;
   }
-  .hello .tuijian-container .tuijian-parent:nth-child(2){
-    padding: 2px 2px 2px 1px;
+  .tuijian-title{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 14px;
+    height: 40px;
+    margin-top: 5px;
+    text-align: left;
   }
-  .hello .tuijian-container .tuijian-parent:nth-child(3){
-    padding: 0 1px 2px 2px;
+  .hello .tuijian-container .tuijian-parent:nth-child(2n){
+    margin-left: 0;
   }
-  .hello .tuijian-container .tuijian-parent:nth-child(4){
-    padding: 0 2px 2px 1px;
-  }
+  /*.hello .tuijian-container .tuijian-parent:nth-child(3){*/
+    /*padding: 0 1px 2px 2px;*/
+  /*}*/
+  /*.hello .tuijian-container .tuijian-parent:nth-child(4){*/
+    /*padding: 0 2px 2px 1px;*/
+  /*}*/
   .hello .tuijian-container img {
     width: 100%;
     height: 100%;
