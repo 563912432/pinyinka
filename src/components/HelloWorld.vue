@@ -12,7 +12,7 @@
         </li>
       </ul>
       <!--顶图广告位-->
-      <div class="img-container" v-if="info.adInfo">
+      <div class="img-container" v-if="info.adInfo && info.adInfo.thumb">
         <img :src="info.adInfo.thumb?host + 'Uploads/' + info.adInfo.thumb:''" alt="" @click="topAdClick(info.adInfo.type, info.adInfo.video_url, info.adInfo.content, 'top')">
       </div>
       <!--推荐广告位-->
@@ -290,7 +290,6 @@
     align-self: center;
     background-color: transparent;
     margin-top: 15px;
-    margin-bottom: 15px;
   }
 
   .hello .img-container img {
@@ -298,6 +297,7 @@
     height: 100%;
   }
   .hello .tuijian-container {
+    margin-top: 15px;
     width: 100%;
     text-align: center;
     background-color: transparent;
