@@ -18,8 +18,11 @@
       <!--推荐广告位-->
       <div class="tuijian-container" v-if="info.adInfo && bottomAd[0] && bottomAd[0].thumb1 !== ''">
         <div class="tuijian-parent" v-for="(item, index) in bottomAd" :key="index">
-          <img :src="item.thumb1?host + 'Uploads/' +item.thumb1:''" alt="" @click="tuijianClick(item.bottom_type, item.contentActivity, item.top_href_video, index)">
+          <div class="tuijian-image">
+            <img :src="item.thumb1?host + 'Uploads/' +item.thumb1:''" alt="" @click="tuijianClick(item.bottom_type, item.contentActivity, item.top_href_video, index)">
+          </div>
           <div class="tuijian-title">
+
             {{item.adTitle}}
           </div>
         </div>
@@ -303,6 +306,7 @@
     background-color: transparent;
   }
   .hello .tuijian-container .tuijian-parent{
+    float: left;
     box-sizing: border-box;
     width: 45.5%;
     margin-left: 3%;
@@ -311,10 +315,17 @@
     height: auto;
     background-color: #ffffff;
     display: flex;
+    display: -webkit-flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
     flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
     /*align-items: center;*/
     justify-content: center;
-    float: left;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
     border-radius: 10px;
     padding: 10px;
   }
@@ -340,7 +351,7 @@
   /*.hello .tuijian-container .tuijian-parent:nth-child(4){*/
     /*padding: 0 2px 2px 1px;*/
   /*}*/
-  .hello .tuijian-container img {
+  .hello .tuijian-container .tuijian-image img {
     width: 100%;
     height: 100%;
   }
